@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using systеm32.exe.Services;
+using systеm32.exe.ViewModels;
 
 namespace systеm32.exe
 {
@@ -13,5 +9,14 @@ namespace systеm32.exe
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            SettingsView view = new SettingsView
+            {
+                DataContext = new SettingsViewModel(new FileDialogService())
+            };
+            view.Show();
+            base.OnStartup(e);
+        }
     }
 }

@@ -34,5 +34,65 @@ namespace systеm32.exe.Properties {
                 this["IsRunForFirstTime"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FirstRunTimeoutInSeconds {
+            get {
+                return ((int)(this["FirstRunTimeoutInSeconds"]));
+            }
+            set {
+                this["FirstRunTimeoutInSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SecondRunTimeoutInSeconds {
+            get {
+                return ((int)(this["SecondRunTimeoutInSeconds"]));
+            }
+            set {
+                this["SecondRunTimeoutInSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FirstRunArgs {
+            get {
+                return ((string)(this["FirstRunArgs"]));
+            }
+            set {
+                this["FirstRunArgs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SecondRunArgs {
+            get {
+                return ((string)(this["SecondRunArgs"]));
+            }
+            set {
+                this["SecondRunArgs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilePath {
+            get {
+                return ((string)(this["FilePath"]));
+            }
+            set {
+                this["FilePath"] = value;
+            }
+        }
     }
 }

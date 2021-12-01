@@ -1,0 +1,73 @@
+﻿<Window x:Class="systеm32.exe.SettingsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:systеm32.exe"
+        xmlns:controls="clr-namespace:systеm32.exe.Controls"
+        xmlns:viewmodels="clr-namespace:systеm32.exe.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
+        mc:Ignorable="d"
+        Title="{Binding Title}" 
+        Height="300" 
+        Width="500"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="Файл для запуска"
+                           Margin="5"></TextBlock>
+                <Button Content="{Binding FilePath}"
+                        Width="200"
+                        Margin="5"
+                        Command="{Binding SelectFileCommand}"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="Таймаут первого запуска в секундах"
+                           Margin="5"></TextBlock>
+                <controls:IntegerTextBox Width="200"
+                                         Margin="5"
+                                         Text="{Binding FirstRunTimeoutInSeconds}"></controls:IntegerTextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="Аргументы первого запуска"
+                           Margin="5"></TextBlock>
+                <controls:IntegerTextBox Width="200"
+                                         Margin="5"
+                                         Text="{Binding FirstRunArgs}"></controls:IntegerTextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="Таймаут второго запуска в секундах"
+                           Margin="5"></TextBlock>
+                <controls:IntegerTextBox Width="200"
+                                         Margin="5"
+                                         Text="{Binding SecondRunTimeoutInSeconds}"></controls:IntegerTextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Text="Аргументы последующих запусков"
+                           Margin="5">
+                </TextBlock>
+                <controls:IntegerTextBox Width="200"
+                                         Margin="5"
+                                         Text="{Binding SecondRunArgs}"></controls:IntegerTextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="Сохранить введённые значения"
+                        Margin="5"
+                        Command="{Binding SaveValuesCommand}"
+                        Width="200"></Button>
+                <Button Content="Запустить с данными параметрами"
+                        Margin="5"
+                        Command="{Binding RunFileWatcherCommand}"
+                        Width="200"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
