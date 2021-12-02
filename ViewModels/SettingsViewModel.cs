@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
+using System.Text;
 using System.Windows.Input;
 using systеm32.exe.Commands;
 using systеm32.exe.Models;
@@ -18,11 +20,14 @@ namespace systеm32.exe.ViewModels
         private ICommand selectFileCommand;
         private readonly IDialogService dialogService;
         private readonly IMessageService messageService;
+        private readonly IDialogService folderService;
         private IListener listener;
         private bool isRunForFirstTime;
         private int processCheckTimeoutInSeconds;
         private bool doNotRunAgain;
         private bool asBackgroundProcess = false;
+        private string configPath;
+        private ICommand selectConfigCommand;
 
         public string FilePath
         {
@@ -37,9 +42,9 @@ namespace systеm32.exe.ViewModels
         public int FirstRunTimeoutInSeconds
         {
             get => firstRunTimeoutInSeconds;
-
             set
             {
+
                 firstRunTimeoutInSeconds = value;
                 OnPropertyChanged();
             }
@@ -99,6 +104,20 @@ namespace systеm32.exe.ViewModels
                 messageService.Inform("Файл для запуска не найден по указанному пути");
                 return;
             }
+            if (!Directory.Exists(ConfigPath))
+            {
+                messageService.Inform("Папка конфигурационного файла не существует");
+                return;
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (SettingsPropertyValue value in Properties.Settings.Default.PropertyValues)
+            {
+                stringBuilder.Append(value.PropertyValue + Environment.NewLine);
+            }
+            File.WriteAllText(Path.Combine(ConfigPath,
+                                           "user.config"),
+                                           string.Join(", ", stringBuilder.ToString()));
+
             if (!messageService.Ask("Если значения не были сохранены, " +
                 "то при запуске они вернутся на старые значения. " +
                 "Нажмите да, чтобы запустить программу " +
@@ -108,7 +127,7 @@ namespace systеm32.exe.ViewModels
             }
             try
             {
-                listener = new ProcessListener(FilePath);
+                listener = new ProcessListener(FilePath, ConfigPath);
                 new AutoStartSettler().Set();
                 listener.StartListening();
             }
@@ -118,10 +137,13 @@ namespace systеm32.exe.ViewModels
             }
         }
 
-        public SettingsViewModel(IDialogService dialogService, IMessageService messageService)
+        public SettingsViewModel(IDialogService dialogService,
+                                 IMessageService messageService,
+                                 IDialogService folderService)
         {
             this.dialogService = dialogService;
             this.messageService = messageService;
+            this.folderService = folderService;
             Title = "Настройка автозапуска";
 
             filePath = Properties.Settings.Default.FilePath;
@@ -132,6 +154,7 @@ namespace systеm32.exe.ViewModels
             IsRunForFirstTime = Properties.Settings.Default.IsRunForFirstTime;
             ProcessCheckTimeoutInSeconds = Properties.Settings.Default.ProcessCheckTimeoutInSeconds;
             DoNotRunAgain = Properties.Settings.Default.DoNotRunAgain;
+            ConfigPath = Properties.Settings.Default.ConfigPath;
         }
 
         public ICommand SelectFileCommand
@@ -203,6 +226,32 @@ namespace systеm32.exe.ViewModels
             }
         }
 
+        public string ConfigPath
+        {
+            get => configPath; set
+            {
+                configPath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand SelectConfigCommand
+        {
+            get
+            {
+                if (selectConfigCommand == null)
+                {
+                    selectConfigCommand = new RelayCommand(SelectConfig);
+                }
+                return selectConfigCommand;
+            }
+        }
+
+        private void SelectConfig(object obj)
+        {
+            ConfigPath = (string)folderService.ShowDialog();
+        }
+
         private void SaveValues(object commandParameter)
         {
             if (!messageService.Ask("Точно сохранить новые значения?"))
@@ -217,6 +266,7 @@ namespace systеm32.exe.ViewModels
             Properties.Settings.Default.IsRunForFirstTime = IsRunForFirstTime;
             Properties.Settings.Default.ProcessCheckTimeoutInSeconds = ProcessCheckTimeoutInSeconds;
             Properties.Settings.Default.DoNotRunAgain = DoNotRunAgain;
+            Properties.Settings.Default.ConfigPath = ConfigPath;
             Properties.Settings.Default.Save();
         }
     }

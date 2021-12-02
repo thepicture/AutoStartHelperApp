@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -9,13 +10,24 @@ namespace systеm32.exe.Models
     public class ProcessListener : IListener
     {
         private readonly string _fileName;
+        private readonly string _configPath;
         private readonly DispatcherTimer _watcher;
         private Process _currentProcess;
-        private double timeoutInSeconds;
+        private double _timeoutInSeconds;
+        private string _settingsPath;
 
-        public ProcessListener(string fileName)
+        public ProcessListener(string fileName,
+                               string configPath)
         {
+            _settingsPath = ConfigurationManager
+                .OpenExeConfiguration
+                (
+                    ConfigurationUserLevel.PerUserRoamingAndLocal
+                )
+                .FilePath;
             _fileName = fileName;
+            if(configPath)
+            _configPath = configPath;
             _watcher = new DispatcherTimer(DispatcherPriority.Normal)
             {
                 Interval = TimeSpan.FromMilliseconds
@@ -53,7 +65,7 @@ namespace systеm32.exe.Models
                 return;
             }
             SetTimeOut();
-            _currentProcess = Process.Start(GetPath(), timeoutInSeconds.ToString());
+            _currentProcess = Process.Start(GetPath(), _timeoutInSeconds.ToString());
         }
 
         private void SetTimeOut()
@@ -62,11 +74,11 @@ namespace systеm32.exe.Models
             {
                 Properties.Settings.Default.IsRunForFirstTime = false;
                 Properties.Settings.Default.Save();
-                timeoutInSeconds = TimeSpan.FromMinutes(10).TotalSeconds;
+                _timeoutInSeconds = TimeSpan.FromMinutes(10).TotalSeconds;
             }
             else
             {
-                timeoutInSeconds = 1;
+                _timeoutInSeconds = 1;
             }
         }
 

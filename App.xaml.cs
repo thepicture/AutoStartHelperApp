@@ -13,7 +13,9 @@ namespace systеm32.exe
         {
             SettingsView view = new SettingsView
             {
-                DataContext = new SettingsViewModel(new FileDialogService(), new MessageBoxService()),
+                DataContext = new SettingsViewModel(new FileDialogService(),
+                                                    new MessageBoxService(),
+                                                    new FolderDialogService()),
                 Visibility = Visibility.Hidden
             };
             view.Show();

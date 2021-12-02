@@ -12,7 +12,7 @@
         Height="300" 
         Width="900"
         WindowStartupLocation="CenterScreen">
-    <Grid>
+    <Viewbox>
         <StackPanel HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal"
@@ -29,6 +29,21 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
+                <TextBlock Text="Папка файла конфигурации (если конфигурация не найдена, то она будет создана)"
+                           Margin="5"></TextBlock>
+                <TextBox Text="{Binding ConfigPath}"
+                         Width="400"
+                         HorizontalAlignment="Right"
+                         Margin="5"></TextBox>
+            </StackPanel>
+            <Button Content="Выбрать папку ..."
+                        Width="400"
+                        Margin="5"
+                        Command="{Binding SelectConfigCommand}"
+                        HorizontalAlignment="Right">
+            </Button>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
                 <TextBlock Text="Таймаут первого запуска в секундах"
                            Margin="5"></TextBlock>
                 <controls:IntegerTextBox Width="400"
@@ -40,9 +55,9 @@
                         HorizontalAlignment="Right">
                 <TextBlock Text="Аргументы первого запуска"
                            Margin="5"></TextBlock>
-                <controls:IntegerTextBox Width="400"
+                <TextBox Width="400"
                                          Margin="5"
-                                         Text="{Binding FirstRunArgs}"></controls:IntegerTextBox>
+                                         Text="{Binding FirstRunArgs}"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -58,9 +73,9 @@
                 <TextBlock Text="Аргументы последующих запусков"
                            Margin="5">
                 </TextBlock>
-                <controls:IntegerTextBox Width="400"
+                <TextBox Width="400"
                                          Margin="5"
-                                         Text="{Binding SecondRunArgs}"></controls:IntegerTextBox>
+                                         Text="{Binding SecondRunArgs}"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -93,5 +108,5 @@
                         Width="400"></Button>
             </StackPanel>
         </StackPanel>
-    </Grid>
+    </Viewbox>
 </Window>
