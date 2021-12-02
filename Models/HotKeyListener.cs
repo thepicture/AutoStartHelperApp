@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace systеm32.exe.Models
 {
-    class HotKeyListener : IListener
+    public class HotKeyListener
     {
-        public void StartListening()
-        {
-            throw new NotImplementedException();
-        }
+        public const uint MOD_CTRL = 0x0002;
+        public const uint VK_S = 0x53;
+        public const uint VK_O = 0x4F;
+        public const int HOTKEY_ID = 9000;
+        public const int VM_HOTKEY = 0x0312;
 
-        public void StopListening()
-        {
-            throw new NotImplementedException();
-        }
+        [DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+        [DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
     }
 }

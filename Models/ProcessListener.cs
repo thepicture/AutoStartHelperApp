@@ -13,19 +13,21 @@ namespace systеm32.exe.Models
         private Process _currentProcess;
         private double timeoutInSeconds;
 
-        public ProcessListener(string fileName, TimeSpan timeSpan)
+        public ProcessListener(string fileName)
         {
             _fileName = fileName;
             _watcher = new DispatcherTimer(DispatcherPriority.Normal)
             {
-                Interval = TimeSpan.FromMilliseconds(timeSpan.TotalMilliseconds)
+                Interval = TimeSpan.FromMilliseconds
+                (
+                    TimeSpan.FromSeconds
+                    (
+                        Properties.Settings.Default.ProcessCheckTimeoutInSeconds
+                    ).TotalMilliseconds
+                )
             };
             _watcher.Tick += KeepChildProcess;
         }
-
-        public ProcessListener(string fileName) : this(fileName,
-                                                       TimeSpan.FromSeconds(1))
-        { }
 
         private void KeepChildProcess(object sender, EventArgs e)
         {
@@ -37,13 +39,6 @@ namespace systеm32.exe.Models
 
         public void StartListening()
         {
-            if (!File.Exists(GetPath()))
-            {
-                MessageBox.Show("Файл для запуска не найден по пути "
-                                + GetPath());
-                App.Current.Shutdown();
-                return;
-            }
             InitializeChildProcess();
             _watcher.Start();
         }

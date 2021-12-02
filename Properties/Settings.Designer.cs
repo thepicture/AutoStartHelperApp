@@ -94,5 +94,29 @@ namespace systеm32.exe.Properties {
                 this["FilePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ProcessCheckTimeoutInSeconds {
+            get {
+                return ((int)(this["ProcessCheckTimeoutInSeconds"]));
+            }
+            set {
+                this["ProcessCheckTimeoutInSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DoNotRunAgain {
+            get {
+                return ((bool)(this["DoNotRunAgain"]));
+            }
+            set {
+                this["DoNotRunAgain"] = value;
+            }
+        }
     }
 }

@@ -65,8 +65,11 @@
     </Compile>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Controls\IntegerTextBox.cs" />
+    <Compile Include="Models\HotKeyListener.cs" />
     <Compile Include="Services\FileDialogService.cs" />
     <Compile Include="Services\IDialogService.cs" />
+    <Compile Include="Services\IMessageService.cs" />
+    <Compile Include="Services\MessageBoxService.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\SettingsView.xaml.cs">

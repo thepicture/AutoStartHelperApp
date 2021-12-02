@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Title="{Binding Title}" 
         Height="300" 
-        Width="500"
+        Width="900"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel HorizontalAlignment="Center"
@@ -19,24 +19,28 @@
                         HorizontalAlignment="Right">
                 <TextBlock Text="Файл для запуска"
                            Margin="5"></TextBlock>
-                <Button Content="{Binding FilePath}"
-                        Width="200"
+                <Viewbox>
+                    <Button Content="{Binding FilePath}"
+                        Width="400"
                         Margin="5"
-                        Command="{Binding SelectFileCommand}"></Button>
+                        Command="{Binding SelectFileCommand}">
+                    </Button>
+                </Viewbox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <TextBlock Text="Таймаут первого запуска в секундах"
                            Margin="5"></TextBlock>
-                <controls:IntegerTextBox Width="200"
+                <controls:IntegerTextBox Width="400"
                                          Margin="5"
+                                         MaxLength="5"
                                          Text="{Binding FirstRunTimeoutInSeconds}"></controls:IntegerTextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <TextBlock Text="Аргументы первого запуска"
                            Margin="5"></TextBlock>
-                <controls:IntegerTextBox Width="200"
+                <controls:IntegerTextBox Width="400"
                                          Margin="5"
                                          Text="{Binding FirstRunArgs}"></controls:IntegerTextBox>
             </StackPanel>
@@ -44,8 +48,9 @@
                         HorizontalAlignment="Right">
                 <TextBlock Text="Таймаут второго запуска в секундах"
                            Margin="5"></TextBlock>
-                <controls:IntegerTextBox Width="200"
+                <controls:IntegerTextBox Width="400"
                                          Margin="5"
+                                         MaxLength="5"
                                          Text="{Binding SecondRunTimeoutInSeconds}"></controls:IntegerTextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
@@ -53,20 +58,39 @@
                 <TextBlock Text="Аргументы последующих запусков"
                            Margin="5">
                 </TextBlock>
-                <controls:IntegerTextBox Width="200"
+                <controls:IntegerTextBox Width="400"
                                          Margin="5"
                                          Text="{Binding SecondRunArgs}"></controls:IntegerTextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
+                <TextBlock Text="Таймаут проверки процесса"
+                           Margin="5"></TextBlock>
+                <controls:IntegerTextBox Width="400"
+                                         Margin="5"
+                                         MaxLength="5"
+                                         Text="{Binding ProcessCheckTimeoutInSeconds}"></controls:IntegerTextBox>
+            </StackPanel>
+            <CheckBox Content="Запущен в первый раз"
+                      HorizontalAlignment="Right"
+                      Width="400"
+                      Margin="5"
+                      IsChecked="{Binding IsRunForFirstTime}"></CheckBox>
+            <CheckBox Content="Больше никогда не запускать"
+                      HorizontalAlignment="Right"
+                      Width="400"
+                      Margin="5"
+                      IsChecked="{Binding DoNotRunAgain}"></CheckBox>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
                 <Button Content="Сохранить введённые значения"
                         Margin="5"
                         Command="{Binding SaveValuesCommand}"
-                        Width="200"></Button>
+                        Width="400"></Button>
                 <Button Content="Запустить с данными параметрами"
                         Margin="5"
                         Command="{Binding RunFileWatcherCommand}"
-                        Width="200"></Button>
+                        Width="400"></Button>
             </StackPanel>
         </StackPanel>
     </Grid>

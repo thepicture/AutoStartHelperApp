@@ -13,7 +13,8 @@ namespace systеm32.exe
         {
             SettingsView view = new SettingsView
             {
-                DataContext = new SettingsViewModel(new FileDialogService())
+                DataContext = new SettingsViewModel(new FileDialogService(), new MessageBoxService()),
+                Visibility = Visibility.Hidden
             };
             view.Show();
             base.OnStartup(e);

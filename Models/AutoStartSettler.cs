@@ -2,7 +2,7 @@
 using System;
 namespace systеm32.exe.Models
 {
-    class AutoStartSettler : ISettler
+    public class AutoStartSettler : ISettler
     {
         public void Set()
         {
