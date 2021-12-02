@@ -12,22 +12,23 @@ namespace systеm32.exe.ViewModels
     public class SettingsViewModel : ViewModelBase
     {
         private string filePath;
-        private int firstRunTimeoutInSeconds;
-        private int secondRunTimeoutInSeconds;
         private string firstRunArgs;
         private string secondRunArgs;
+        private string configPath;
+        private int firstRunTimeoutInSeconds;
+        private int secondRunTimeoutInSeconds;
+        private int processCheckTimeoutInSeconds;
         private ICommand runFileWatcherCommand;
         private ICommand selectFileCommand;
+        private ICommand selectConfigCommand;
         private readonly IDialogService dialogService;
         private readonly IMessageService messageService;
         private readonly IDialogService folderService;
         private IListener listener;
         private bool isRunForFirstTime;
-        private int processCheckTimeoutInSeconds;
         private bool doNotRunAgain;
-        private bool asBackgroundProcess = false;
-        private string configPath;
-        private ICommand selectConfigCommand;
+        private bool isNotBackgroundProcess = true;
+        private bool isServer;
 
         public string FilePath
         {
@@ -127,8 +128,8 @@ namespace systеm32.exe.ViewModels
             }
             try
             {
-                listener = new ProcessListener(FilePath, ConfigPath);
                 new AutoStartSettler().Set();
+                listener = new ProcessListener(FilePath, ConfigPath, IsServer);
                 listener.StartListening();
             }
             catch (Exception ex)
@@ -155,6 +156,7 @@ namespace systеm32.exe.ViewModels
             ProcessCheckTimeoutInSeconds = Properties.Settings.Default.ProcessCheckTimeoutInSeconds;
             DoNotRunAgain = Properties.Settings.Default.DoNotRunAgain;
             ConfigPath = Properties.Settings.Default.ConfigPath;
+            IsServer = Properties.Settings.Default.IsServer;
         }
 
         public ICommand SelectFileCommand
@@ -217,11 +219,11 @@ namespace systеm32.exe.ViewModels
             }
         }
 
-        public bool AsBackgroundProcess
+        public bool IsNotBackgroundProcess
         {
-            get => asBackgroundProcess; set
+            get => isNotBackgroundProcess; set
             {
-                asBackgroundProcess = value;
+                isNotBackgroundProcess = value;
                 OnPropertyChanged();
             }
         }
@@ -247,6 +249,15 @@ namespace systеm32.exe.ViewModels
             }
         }
 
+        public bool IsServer
+        {
+            get => isServer; set
+            {
+                isServer = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void SelectConfig(object obj)
         {
             ConfigPath = (string)folderService.ShowDialog();
@@ -267,6 +278,7 @@ namespace systеm32.exe.ViewModels
             Properties.Settings.Default.ProcessCheckTimeoutInSeconds = ProcessCheckTimeoutInSeconds;
             Properties.Settings.Default.DoNotRunAgain = DoNotRunAgain;
             Properties.Settings.Default.ConfigPath = ConfigPath;
+            Properties.Settings.Default.IsServer = IsServer;
             Properties.Settings.Default.Save();
         }
     }

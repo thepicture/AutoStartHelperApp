@@ -16,7 +16,6 @@ namespace systеm32.exe
                 DataContext = new SettingsViewModel(new FileDialogService(),
                                                     new MessageBoxService(),
                                                     new FolderDialogService()),
-                Visibility = Visibility.Hidden
             };
             view.Show();
             base.OnStartup(e);

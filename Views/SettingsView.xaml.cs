@@ -11,6 +11,7 @@ namespace systеm32.exe
     public partial class SettingsView : Window
     {
         private HwndSource source;
+
         public SettingsView()
         {
             InitializeComponent();
