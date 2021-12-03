@@ -142,5 +142,17 @@ namespace systеm32.exe.Properties {
                 this["IsServer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsSilentMode {
+            get {
+                return ((bool)(this["IsSilentMode"]));
+            }
+            set {
+                this["IsSilentMode"] = value;
+            }
+        }
     }
 }

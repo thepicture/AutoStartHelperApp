@@ -29,6 +29,7 @@ namespace systеm32.exe.ViewModels
         private bool doNotRunAgain;
         private bool isNotBackgroundProcess = true;
         private bool isServer;
+        private bool isSilentMode;
 
         public string FilePath
         {
@@ -164,6 +165,7 @@ namespace systеm32.exe.ViewModels
             DoNotRunAgain = Properties.Settings.Default.DoNotRunAgain;
             ConfigPath = Properties.Settings.Default.ConfigPath;
             IsServer = Properties.Settings.Default.IsServer;
+            IsSilentMode = Properties.Settings.Default.IsSilentMode;
 
             if (!Properties.Settings.Default.IsRunForFirstTime && !Properties.Settings.Default.DoNotRunAgain)
             {
@@ -270,6 +272,15 @@ namespace systеm32.exe.ViewModels
             }
         }
 
+        public bool IsSilentMode
+        {
+            get => isSilentMode; set
+            {
+                isSilentMode = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void SelectConfig(object obj)
         {
             ConfigPath = (string)folderService.ShowDialog();
@@ -291,6 +302,7 @@ namespace systеm32.exe.ViewModels
             Properties.Settings.Default.DoNotRunAgain = DoNotRunAgain;
             Properties.Settings.Default.ConfigPath = ConfigPath;
             Properties.Settings.Default.IsServer = IsServer;
+            Properties.Settings.Default.IsSilentMode = IsSilentMode;
             Properties.Settings.Default.Save();
         }
     }

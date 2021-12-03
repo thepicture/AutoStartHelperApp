@@ -120,6 +120,11 @@
                       Width="400"
                       Margin="5"
                       IsChecked="{Binding DoNotRunAgain}"></CheckBox>
+            <CheckBox Content="Не показывать ошибки на экране системы"
+                      HorizontalAlignment="Right"
+                      Width="400"
+                      Margin="5"
+                      IsChecked="{Binding IsSilentMode}"></CheckBox>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Content="Сохранить введённые значения"

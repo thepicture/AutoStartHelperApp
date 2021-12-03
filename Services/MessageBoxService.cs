@@ -6,18 +6,29 @@ namespace systеm32.exe.Services
     {
         public bool Ask(string message)
         {
-            return MessageBox.Show(message,
-                                   "Вопрос",
-                                   MessageBoxButton.YesNo,
-                                   MessageBoxImage.Question) == MessageBoxResult.Yes;
+            if (!Properties.Settings.Default.IsSilentMode)
+            {
+
+                return MessageBox.Show(message,
+                                       "Вопрос",
+                                       MessageBoxButton.YesNo,
+                                       MessageBoxImage.Question) == MessageBoxResult.Yes;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public void Inform(string message)
         {
-            _ = MessageBox.Show(message,
-                                    "Информация",
-                                    MessageBoxButton.OK,
-                                    MessageBoxImage.Information);
+            if (!Properties.Settings.Default.IsSilentMode)
+            {
+                _ = MessageBox.Show(message,
+                                        "Информация",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Information);
+            }
         }
     }
 }
