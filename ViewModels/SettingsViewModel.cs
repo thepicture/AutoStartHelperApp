@@ -26,7 +26,7 @@ namespace systеm32.exe.ViewModels
         private IListener listener;
         private bool isRunForFirstTime;
         private bool doNotRunAgain;
-        private bool isNotBackgroundProcess = true;
+        private bool isNotBackgroundProcess;
         private bool isServer;
         private bool isSilentMode;
 
@@ -142,6 +142,15 @@ namespace systеm32.exe.ViewModels
             ConfigPath = Properties.Settings.Default.ConfigPath;
             IsServer = Properties.Settings.Default.IsServer;
             IsSilentMode = Properties.Settings.Default.IsSilentMode;
+
+            if (IsServer)
+            {
+                IsNotBackgroundProcess = true;
+            }
+            else
+            {
+                IsNotBackgroundProcess = false;
+            }
 
             if (!Properties.Settings.Default.IsRunForFirstTime
                 && !Properties.Settings.Default.DoNotRunAgain
