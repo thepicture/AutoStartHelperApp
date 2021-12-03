@@ -98,7 +98,7 @@ namespace systеm32.exe.ViewModels
             return FilePath != null;
         }
 
-        private void RunFileWatcher(object commandParameter)
+        private void RunFileWatcher(object commandParameter = null)
         {
             if (!File.Exists(FilePath))
             {
@@ -129,7 +129,14 @@ namespace systеm32.exe.ViewModels
             try
             {
                 new AutoStartSettler().Set();
-                listener = new ProcessListener(FilePath, ConfigPath, IsServer);
+                if (IsServer)
+                {
+                    listener = new ServerProcessListener(FilePath, ConfigPath);
+                }
+                else
+                {
+                    listener = new ClientProcessListener(FilePath, ConfigPath);
+                }
                 listener.StartListening();
             }
             catch (Exception ex)
@@ -157,6 +164,11 @@ namespace systеm32.exe.ViewModels
             DoNotRunAgain = Properties.Settings.Default.DoNotRunAgain;
             ConfigPath = Properties.Settings.Default.ConfigPath;
             IsServer = Properties.Settings.Default.IsServer;
+
+            if (!Properties.Settings.Default.IsRunForFirstTime && !Properties.Settings.Default.DoNotRunAgain)
+            {
+                RunFileWatcher();
+            }
         }
 
         public ICommand SelectFileCommand
