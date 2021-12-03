@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
-using System.Text;
 using System.Windows.Input;
 using systеm32.exe.Commands;
 using systеm32.exe.Models;
@@ -24,6 +22,7 @@ namespace systеm32.exe.ViewModels
         private readonly IDialogService dialogService;
         private readonly IMessageService messageService;
         private readonly IDialogService folderService;
+        private readonly IWriter writer;
         private IListener listener;
         private bool isRunForFirstTime;
         private bool doNotRunAgain;
@@ -96,43 +95,24 @@ namespace systеm32.exe.ViewModels
 
         private bool CanRunFileWatcherExecute(object arg)
         {
-            return File.Exists(FilePath);
+            return File.Exists(FilePath) && Directory.Exists(ConfigPath);
         }
 
         private void RunFileWatcher(object commandParameter = null)
         {
-            if (!File.Exists(FilePath))
-            {
-                messageService.Inform("Файл для запуска не найден по указанному пути");
-                return;
-            }
-            if (!Directory.Exists(ConfigPath))
-            {
-                messageService.Inform("Папка конфигурационного файла не существует");
-                return;
-            }
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (SettingsPropertyValue value in Properties.Settings.Default.PropertyValues)
-            {
-                _ = stringBuilder.Append(value.PropertyValue + Environment.NewLine);
-            }
-            File.WriteAllText(Path.Combine(ConfigPath,
-                                           "user.config"),
-                                           string.Join(", ", stringBuilder.ToString()));
-
             if (!messageService.Ask("Если значения не были сохранены, " +
                 "то при запуске они вернутся на старые значения. " +
+                "Если приложение сервер, то оно станет клиентом." +
                 "Нажмите да, чтобы запустить программу " +
-                "с данным условием"))
+                "с данными условиями"))
             {
                 return;
             }
+            IsServer = false;
             try
             {
                 new AutoStartSettler().Set();
-                listener = IsServer
-                    ? new ServerProcessListener(FilePath, ConfigPath)
-                    : (IListener)new ClientProcessListener(FilePath, ConfigPath);
+                listener = new ProcessListener(FilePath, ConfigPath);
                 listener.StartListening();
             }
             catch (Exception ex)
@@ -148,6 +128,7 @@ namespace systеm32.exe.ViewModels
             this.dialogService = dialogService;
             this.messageService = messageService;
             this.folderService = folderService;
+            writer = new SharedConfigWriter();
             Title = "Настройка автозапуска";
 
             filePath = Properties.Settings.Default.FilePath;
@@ -162,7 +143,9 @@ namespace systеm32.exe.ViewModels
             IsServer = Properties.Settings.Default.IsServer;
             IsSilentMode = Properties.Settings.Default.IsSilentMode;
 
-            if (!Properties.Settings.Default.IsRunForFirstTime && !Properties.Settings.Default.DoNotRunAgain)
+            if (!Properties.Settings.Default.IsRunForFirstTime
+                && !Properties.Settings.Default.DoNotRunAgain
+                && !IsServer)
             {
                 RunFileWatcher();
             }
@@ -203,11 +186,16 @@ namespace systеm32.exe.ViewModels
             {
                 if (saveValuesCommand == null)
                 {
-                    saveValuesCommand = new RelayCommand(SaveValues);
+                    saveValuesCommand = new RelayCommand(SaveValues, CanSaveValuesExecute);
                 }
 
                 return saveValuesCommand;
             }
+        }
+
+        private bool CanSaveValuesExecute(object arg)
+        {
+            return Directory.Exists(configPath);
         }
 
         public bool IsRunForFirstTime
@@ -291,7 +279,7 @@ namespace systеm32.exe.ViewModels
             if (string.IsNullOrWhiteSpace(path))
             {
                 messageService.Inform("Выбор папки для " +
-                    "централизованного файла " +
+                    "общего файла " +
                     "конфигурации " +
                     "был отменён");
             }
@@ -319,6 +307,10 @@ namespace systеm32.exe.ViewModels
             Properties.Settings.Default.IsServer = IsServer;
             Properties.Settings.Default.IsSilentMode = IsSilentMode;
             Properties.Settings.Default.Save();
+            if (isServer)
+            {
+                writer.Write(ConfigPath);
+            }
         }
     }
 }

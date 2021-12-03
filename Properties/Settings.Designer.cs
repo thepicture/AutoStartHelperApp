@@ -154,5 +154,17 @@ namespace systеm32.exe.Properties {
                 this["IsSilentMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("user.sharedconfig")]
+        public string ConfigFileName {
+            get {
+                return ((string)(this["ConfigFileName"]));
+            }
+            set {
+                this["ConfigFileName"] = value;
+            }
+        }
     }
 }

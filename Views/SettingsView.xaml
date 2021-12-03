@@ -43,6 +43,7 @@
                 <Button Content="{Binding FilePath}"
                         Width="400"
                         Margin="5"
+                        Height="20"
                         Command="{Binding SelectFileCommand}"
                         ToolTip="Устанавливает клиентам путь к файлу для запуска">
                     <Button.ContentTemplate>
@@ -58,7 +59,7 @@
                         HorizontalAlignment="Right">
                 <TextBlock Text="Папка файла конфигурации"
                            Margin="5"></TextBlock>
-                <TextBox Text="{Binding ConfigPath}"
+                <TextBox Text="{Binding ConfigPath, Mode=TwoWay}"
                          Width="400"
                          HorizontalAlignment="Right"
                          Margin="5"
@@ -112,13 +113,13 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                <TextBlock Text="Таймаут проверки присутствия процесса"
+                <TextBlock Text="Таймаут проверки присутствия процесса в секундах"
                            Margin="5"></TextBlock>
                 <controls:IntegerTextBox Width="400"
                                          Margin="5"
                                          MaxLength="5"
                                          Text="{Binding ProcessCheckTimeoutInSeconds}"
-                                         ToolTip="Указывает, через какой интервал времени клиенты проверяют, что файл для запуска работает"></controls:IntegerTextBox>
+                                         ToolTip="Указывает, через какой интервал времени клиенты проверяют, что запущенный файл работает"></controls:IntegerTextBox>
             </StackPanel>
             <CheckBox Content="Запущен в первый раз"
                       HorizontalAlignment="Right"
