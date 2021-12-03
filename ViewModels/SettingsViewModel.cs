@@ -96,7 +96,7 @@ namespace systеm32.exe.ViewModels
 
         private bool CanRunFileWatcherExecute(object arg)
         {
-            return FilePath != null;
+            return File.Exists(FilePath);
         }
 
         private void RunFileWatcher(object commandParameter = null)
@@ -114,7 +114,7 @@ namespace systеm32.exe.ViewModels
             StringBuilder stringBuilder = new StringBuilder();
             foreach (SettingsPropertyValue value in Properties.Settings.Default.PropertyValues)
             {
-                stringBuilder.Append(value.PropertyValue + Environment.NewLine);
+                _ = stringBuilder.Append(value.PropertyValue + Environment.NewLine);
             }
             File.WriteAllText(Path.Combine(ConfigPath,
                                            "user.config"),
@@ -130,14 +130,9 @@ namespace systеm32.exe.ViewModels
             try
             {
                 new AutoStartSettler().Set();
-                if (IsServer)
-                {
-                    listener = new ServerProcessListener(FilePath, ConfigPath);
-                }
-                else
-                {
-                    listener = new ClientProcessListener(FilePath, ConfigPath);
-                }
+                listener = IsServer
+                    ? new ServerProcessListener(FilePath, ConfigPath)
+                    : (IListener)new ClientProcessListener(FilePath, ConfigPath);
                 listener.StartListening();
             }
             catch (Exception ex)
@@ -188,7 +183,16 @@ namespace systеm32.exe.ViewModels
 
         private void SelectFile(object commandParameter)
         {
-            FilePath = (string)dialogService.ShowDialog();
+
+            string path = (string)dialogService.ShowDialog();
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                messageService.Inform("Выбор файла был отменён");
+            }
+            else
+            {
+                FilePath = path;
+            }
         }
 
         private RelayCommand saveValuesCommand;
@@ -283,7 +287,18 @@ namespace systеm32.exe.ViewModels
 
         private void SelectConfig(object obj)
         {
-            ConfigPath = (string)folderService.ShowDialog();
+            string path = (string)folderService.ShowDialog();
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                messageService.Inform("Выбор папки для " +
+                    "централизованного файла " +
+                    "конфигурации " +
+                    "был отменён");
+            }
+            else
+            {
+                ConfigPath = path;
+            }
         }
 
         private void SaveValues(object commandParameter)

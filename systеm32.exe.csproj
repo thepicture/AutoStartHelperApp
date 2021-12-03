@@ -69,7 +69,9 @@
     <Compile Include="Controls\IntegerTextBox.cs" />
     <Compile Include="Models\ClientProcessListener.cs" />
     <Compile Include="Models\HotKeyListener.cs" />
+    <Compile Include="Models\IParser.cs" />
     <Compile Include="Models\IWriter.cs" />
+    <Compile Include="Models\PropertiesParser.cs" />
     <Compile Include="Models\ServerProcessListener.cs" />
     <Compile Include="Models\ServerWriter.cs" />
     <Compile Include="Services\FileDialogService.cs" />

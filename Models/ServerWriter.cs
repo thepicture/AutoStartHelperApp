@@ -2,7 +2,7 @@
 
 namespace systеm32.exe.Models
 {
-    class ServerWriter : IWriter
+    public class ServerWriter : IWriter
     {
         public void Write(string destination)
         {

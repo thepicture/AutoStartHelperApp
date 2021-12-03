@@ -28,11 +28,13 @@
                 <RadioButton Content="Сервер"
                              Margin="5"
                              GroupName="TypeOfApp"
-                             IsChecked="{Binding IsServer}"></RadioButton>
+                             IsChecked="{Binding IsServer}"
+                             ToolTip="Программа будет устанавливать файл конфигурации для клиентов"></RadioButton>
                 <RadioButton Content="Клиент"
                              Margin="5"
                              IsChecked="True"
-                             GroupName="TypeOfApp"></RadioButton>
+                             GroupName="TypeOfApp"
+                             ToolTip="Приложение будет считывать файл конфигурации и на его основе запускать приложения"></RadioButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -41,7 +43,8 @@
                 <Button Content="{Binding FilePath}"
                         Width="400"
                         Margin="5"
-                        Command="{Binding SelectFileCommand}">
+                        Command="{Binding SelectFileCommand}"
+                        ToolTip="Устанавливает клиентам путь к файлу для запуска">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Viewbox>
@@ -53,18 +56,20 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                <TextBlock Text="Папка файла конфигурации (если конфигурация не найдена, то она будет создана)"
+                <TextBlock Text="Папка файла конфигурации"
                            Margin="5"></TextBlock>
                 <TextBox Text="{Binding ConfigPath}"
                          Width="400"
                          HorizontalAlignment="Right"
-                         Margin="5"></TextBox>
+                         Margin="5"
+                         ToolTip="Путь к папке конфигурации"></TextBox>
             </StackPanel>
             <Button Content="Выбрать папку ..."
                         Width="400"
                         Margin="5"
                         Command="{Binding SelectConfigCommand}"
-                        HorizontalAlignment="Right">
+                        HorizontalAlignment="Right"
+                        ToolTip="Устанавливает общую папку конфигурации для сервера и клиентов. Если конфигурация не найдена, то она будет создана">
             </Button>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -73,15 +78,17 @@
                 <controls:IntegerTextBox Width="400"
                                          Margin="5"
                                          MaxLength="5"
-                                         Text="{Binding FirstRunTimeoutInSeconds}"></controls:IntegerTextBox>
+                                         Text="{Binding FirstRunTimeoutInSeconds}"
+                                         ToolTip="Сколько секунд клиенты ожидают перед запуском процесса в первый запуск"></controls:IntegerTextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <TextBlock Text="Аргументы первого запуска"
                            Margin="5"></TextBlock>
                 <TextBox Width="400"
-                                         Margin="5"
-                                         Text="{Binding FirstRunArgs}"></TextBox>
+                         Margin="5"
+                         Text="{Binding FirstRunArgs}"
+                         ToolTip="С какими аргументами командной строки клиент запускает процесс в первый запуск"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -90,7 +97,8 @@
                 <controls:IntegerTextBox Width="400"
                                          Margin="5"
                                          MaxLength="5"
-                                         Text="{Binding SecondRunTimeoutInSeconds}"></controls:IntegerTextBox>
+                                         Text="{Binding SecondRunTimeoutInSeconds}"
+                                         ToolTip="Сколько секунд клиенты ожидают перед запуском процесса по данному пути к файлу в последущие разы после первого запуска"></controls:IntegerTextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -99,42 +107,49 @@
                 </TextBlock>
                 <TextBox Width="400"
                                          Margin="5"
-                                         Text="{Binding SecondRunArgs}"></TextBox>
+                                         Text="{Binding SecondRunArgs}"
+                                         ToolTip="С какими аргументами командной строки клиент запускает процесс в последующие после первого раза запуски"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                <TextBlock Text="Таймаут проверки процесса"
+                <TextBlock Text="Таймаут проверки присутствия процесса"
                            Margin="5"></TextBlock>
                 <controls:IntegerTextBox Width="400"
                                          Margin="5"
                                          MaxLength="5"
-                                         Text="{Binding ProcessCheckTimeoutInSeconds}"></controls:IntegerTextBox>
+                                         Text="{Binding ProcessCheckTimeoutInSeconds}"
+                                         ToolTip="Указывает, через какой интервал времени клиенты проверяют, что файл для запуска работает"></controls:IntegerTextBox>
             </StackPanel>
             <CheckBox Content="Запущен в первый раз"
                       HorizontalAlignment="Right"
                       Width="400"
                       Margin="5"
-                      IsChecked="{Binding IsRunForFirstTime}"></CheckBox>
+                      IsChecked="{Binding IsRunForFirstTime}"
+                      ToolTip="Указывает клиентам, что они запущены в первый раз"></CheckBox>
             <CheckBox Content="Больше никогда не запускать"
                       HorizontalAlignment="Right"
                       Width="400"
                       Margin="5"
-                      IsChecked="{Binding DoNotRunAgain}"></CheckBox>
-            <CheckBox Content="Не показывать ошибки на экране системы"
+                      IsChecked="{Binding DoNotRunAgain}"
+                      ToolTip="Указывает клиентам, что дальнейшие запуски не нужны"></CheckBox>
+            <CheckBox Content="Не показывать всплывающие окна"
                       HorizontalAlignment="Right"
                       Width="400"
                       Margin="5"
-                      IsChecked="{Binding IsSilentMode}"></CheckBox>
+                      IsChecked="{Binding IsSilentMode}"
+                      ToolTip="Указывает, что ни сервер, ни клиент не должны оповещать пользователя системы"></CheckBox>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Content="Сохранить введённые значения"
                         Margin="5"
                         Command="{Binding SaveValuesCommand}"
-                        Width="400"></Button>
+                        Width="400"
+                        ToolTip="Сохраняет файл конфигурации в локальной папке и в общем файле конфигурации, если приложение является сервером. В противном случае сохраняет файл конфигурации локально"></Button>
                 <Button Content="Запустить с данными параметрами"
                         Margin="5"
                         Command="{Binding RunFileWatcherCommand}"
-                        Width="400"></Button>
+                        Width="400"
+                        ToolTip="Запускает приложение, не сохраняя введённые значения конфигурации, если приложение клиент"></Button>
             </StackPanel>
         </StackPanel>
     </Viewbox>
