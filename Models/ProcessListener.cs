@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -8,18 +8,13 @@ namespace systеm32.exe.Models
 {
     public class ProcessListener : IListener
     {
-        private readonly string filePath;
-        private readonly string configPath;
         private readonly DispatcherTimer watcher;
         private Process _currentProcess;
         private readonly ISynchronizer synchronizer;
         private bool isInitializing = false;
 
-        public ProcessListener(string filePath,
-                               string configPath)
+        public ProcessListener()
         {
-            this.filePath = filePath;
-            this.configPath = configPath;
             synchronizer = new SharedConfigSynchronizer();
             watcher = new DispatcherTimer(DispatcherPriority.Normal)
             {
@@ -40,7 +35,7 @@ namespace systеm32.exe.Models
             {
                 return;
             }
-            synchronizer.Synchronize(configPath);
+            synchronizer.Synchronize(Properties.Settings.Default.ConfigPath);
             if (Properties.Settings.Default.DoNotRunAgain)
             {
                 return;
@@ -64,21 +59,50 @@ namespace systеm32.exe.Models
             {
                 Properties.Settings.Default.IsRunForFirstTime = false;
                 Properties.Settings.Default.Save();
-                new SharedConfigWriter().Write(configPath);
+                string sharedConfigText = File.ReadAllText(Path.Combine(Properties.Settings.Default.ConfigPath, Properties.Settings.Default.ConfigFileName));
+                sharedConfigText = sharedConfigText.Replace(nameof(Properties.Settings.Default.IsRunForFirstTime) + "\tTrue", nameof(Properties.Settings.Default.IsRunForFirstTime) + "\tFalse");
+                File.WriteAllText(Path.Combine(Properties.Settings.Default.ConfigPath, Properties.Settings.Default.ConfigFileName), sharedConfigText);
                 await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.FirstRunTimeoutInSeconds));
-                _currentProcess = Process.Start(filePath, Properties.Settings.Default.FirstRunArgs);
+                try
+                {
+                    _currentProcess = Process.Start
+                        (
+                            Properties.Settings.Default.FilePath, Properties.Settings.Default.FirstRunArgs
+                        );
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
-                await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.SecondRunTimeoutInSeconds));
-                _currentProcess = Process.Start(filePath, Properties.Settings.Default.SecondRunArgs);
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.SecondRunTimeoutInSeconds));
+                    _currentProcess = Process.Start
+                        (
+                            Properties.Settings.Default.FilePath, Properties.Settings.Default.SecondRunArgs
+                        );
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             isInitializing = false;
         }
 
         public void StopListening()
         {
-            _currentProcess.Kill();
+            try
+            {
+                _currentProcess.Kill();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

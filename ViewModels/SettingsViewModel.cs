@@ -87,32 +87,30 @@ namespace systеm32.exe.ViewModels
             {
                 if (runFileWatcherCommand == null)
                 {
-                    runFileWatcherCommand = new RelayCommand(RunFileWatcher, CanRunFileWatcherExecute);
+                    runFileWatcherCommand = new RelayCommand(RunFileWatcher);
                 }
                 return runFileWatcherCommand;
             }
-        }
-
-        private bool CanRunFileWatcherExecute(object arg)
-        {
-            return File.Exists(FilePath) && Directory.Exists(ConfigPath);
         }
 
         private void RunFileWatcher(object commandParameter = null)
         {
             if (!messageService.Ask("Если значения не были сохранены, " +
                 "то при запуске они вернутся на старые значения. " +
-                "Если приложение сервер, то оно станет клиентом." +
+                "Приложение станет клиентом. " +
                 "Нажмите да, чтобы запустить программу " +
                 "с данными условиями"))
             {
                 return;
             }
             IsServer = false;
+            Properties.Settings.Default.IsServer = IsServer;
+            Properties.Settings.Default.Save();
+
             try
             {
                 new AutoStartSettler().Set();
-                listener = new ProcessListener(FilePath, ConfigPath);
+                listener = new ProcessListener();
                 listener.StartListening();
             }
             catch (Exception ex)
@@ -131,11 +129,11 @@ namespace systеm32.exe.ViewModels
             writer = new SharedConfigWriter();
             Title = "Настройка автозапуска";
 
-            filePath = Properties.Settings.Default.FilePath;
-            firstRunTimeoutInSeconds = Properties.Settings.Default.FirstRunTimeoutInSeconds;
-            secondRunTimeoutInSeconds = Properties.Settings.Default.SecondRunTimeoutInSeconds;
-            firstRunArgs = Properties.Settings.Default.FirstRunArgs;
-            secondRunArgs = Properties.Settings.Default.SecondRunArgs;
+            FilePath = Properties.Settings.Default.FilePath;
+            FirstRunTimeoutInSeconds = Properties.Settings.Default.FirstRunTimeoutInSeconds;
+            SecondRunTimeoutInSeconds = Properties.Settings.Default.SecondRunTimeoutInSeconds;
+            FirstRunArgs = Properties.Settings.Default.FirstRunArgs;
+            SecondRunArgs = Properties.Settings.Default.SecondRunArgs;
             IsRunForFirstTime = Properties.Settings.Default.IsRunForFirstTime;
             ProcessCheckTimeoutInSeconds = Properties.Settings.Default.ProcessCheckTimeoutInSeconds;
             DoNotRunAgain = Properties.Settings.Default.DoNotRunAgain;
@@ -143,14 +141,7 @@ namespace systеm32.exe.ViewModels
             IsServer = Properties.Settings.Default.IsServer;
             IsSilentMode = Properties.Settings.Default.IsSilentMode;
 
-            if (IsServer)
-            {
-                IsNotBackgroundProcess = true;
-            }
-            else
-            {
-                IsNotBackgroundProcess = false;
-            }
+            IsNotBackgroundProcess = IsServer;
 
             if (!Properties.Settings.Default.IsRunForFirstTime
                 && !Properties.Settings.Default.DoNotRunAgain
@@ -195,16 +186,11 @@ namespace systеm32.exe.ViewModels
             {
                 if (saveValuesCommand == null)
                 {
-                    saveValuesCommand = new RelayCommand(SaveValues, CanSaveValuesExecute);
+                    saveValuesCommand = new RelayCommand(SaveValues);
                 }
 
                 return saveValuesCommand;
             }
-        }
-
-        private bool CanSaveValuesExecute(object arg)
-        {
-            return Directory.Exists(configPath);
         }
 
         public bool IsRunForFirstTime
@@ -316,7 +302,7 @@ namespace systеm32.exe.ViewModels
             Properties.Settings.Default.IsServer = IsServer;
             Properties.Settings.Default.IsSilentMode = IsSilentMode;
             Properties.Settings.Default.Save();
-            if (isServer)
+            if (IsServer)
             {
                 writer.Write(ConfigPath);
             }

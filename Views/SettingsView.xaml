@@ -25,33 +25,11 @@
                     VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                <RadioButton Content="Сервер"
+                <CheckBox Content="Сервер"
                              Margin="5"
-                             GroupName="TypeOfApp"
-                             IsChecked="{Binding IsServer}"
-                             ToolTip="Программа будет устанавливать файл конфигурации для клиентов">
-                </RadioButton>
-                <RadioButton Content="Клиент"
-                             Margin="5"
-                             GroupName="TypeOfApp"
-                             ToolTip="Приложение будет считывать файл конфигурации и на его основе запускать приложения">
-                    <RadioButton.Style>
-                        <Style TargetType="RadioButton">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.IsServer}"
-                                             Value="False">
-                                    <Setter Property="IsChecked"
-                                            Value="True"></Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.IsServer}"
-                                             Value="True">
-                                    <Setter Property="IsChecked"
-                                            Value="False"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </RadioButton.Style>
-                </RadioButton>
+                          IsChecked="{Binding IsServer}"
+                             ToolTip="Если флажок установлен, то приложение сервер, в противном случае приложение является клиентом">
+                </CheckBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
